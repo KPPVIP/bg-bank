@@ -1,0 +1,134 @@
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="ui.css">
+        <title>Made By Bg-Dev</title>
+    </head>
+    <body>
+        <div id="Canvas">
+            <div id="banking">
+                <div id="test11"></div>
+                <div id="main">
+                <button class="btn-sign-out">
+                    <div id="close">
+                        <svg class="blockforx">
+                            <rect id="blockforx" rx="5" ry="5" x="0" y="0" width="30" height="30">
+                            </rect>
+                        </svg>
+                        <img id="x" src="https://cdn.discordapp.com/attachments/788240573382787114/881062567261384714/x_1.png">       
+                    </div>
+                    </button>
+                </button>
+                <p class="stats" style="font-weight: 100;">Statistiken</p>
+                <img id="graph" src="https://cdn.discordapp.com/attachments/913082991155240990/944701737992876144/fe-hist.png">
+                <img id="card" src="https://cdn.discordapp.com/attachments/913082991155240990/944764935072788560/card.png">
+                <p class="schriftcard" style="font-weight: 100;">Kreditkarte</p>
+                <img id="logo" src="https://cdn.discordapp.com/attachments/768488581059837983/944410996271882290/trans-logo.png">
+                <img id="mastercard" src="https://images-ext-2.discordapp.net/external/2QL7Ij_9pldwIqNFTr8v0KtWVOvCy8KuKfbZZN3awBs/https/media.discordapp.net/attachments/913082991155240990/944743954644107365/Mastercard-Logo.png">
+                <img id="card2" src="https://images-ext-1.discordapp.net/external/6jayg4vdvhJgAH5Xys89tkoPSJ7OFnMO7PSswlctTj0/https/media.discordapp.net/attachments/913082991155240990/944743972939657246/istockphoto-1151397537-612x612.png">
+                <p class="steamname">BG DEVELOPMENT</p>
+                <p class="steamname2">2022</p>
+
+                <div class="place">
+                    <div class="place2">
+                        <p class="schrift0">Infos</p>
+                        <p class="kontoinhaber">Kontoinhaber</p>
+                        <p class="vorname"></p>
+                    </div>
+                    <div class="test2">
+                        <p class="testschrift" style="left: 50px;">Kontostand</p>
+                        <p class="stand">0<span id="test" style="color:rgb(255, 0, 0)">$</span></p>
+    
+                    </div> 
+                </div>
+            </form>
+
+            <form id="einzahlen">
+                <p class="schrift2" style="font-weight: 100;">Einzahlen</p>
+                <input type="number" maxlength='10' id="einzahl" placeholder="0 $">
+                <button class="buttoneinzahlen" type="submit"><p class="klein" style="left: -180%; color: aliceblue;">Einzahlen</p></button>
+                </form>
+
+                <form id="auszahlen">
+                    <p class="schrift3" style="font-weight: 100;">Auszahlen</p>
+                    <input type="number"  maxlength='10' id="auszahl" placeholder="0 $">
+                    <button class="buttonauszahlen" type="submit"><p class="klein" style="left: -180%; color: aliceblue;">Auszahlen</p></button>
+                </form>
+
+                    <form id="uberweisen">
+                        <p class="schrift4" style="font-weight: 100;">Überweisen</p>
+                        <input type="number"  maxlength='10' id="uberweis" placeholder="0 $"">
+                        <input type="number"  maxlength='10' id="id" placeholder="ID">
+                        <button class="buttonuberweisen" type="submit"><p class="klein" style="left: -180%; color: aliceblue;">Uberweisen</p></button>
+
+
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+                <script type="text/javascript">
+$(function() {
+    window.addEventListener('message', function(event) {
+        if (event.data.type === "openGeneral"){
+            $('body').show();
+        } else if(event.data.type === "balanceHUD") {
+                $('.vorname').html(event.data.player);
+                $('.stand').html(event.data.balance + " $");
+        } else if (event.data.type === "closeAll"){
+            $('body').hide();
+        }
+    });
+});
+
+$('.btn-sign-out').click(function(){
+	            $('body').hide();
+	            $.post('http://bg-bank/NUIFocusOff', JSON.stringify({}));
+	        })
+
+$('.black').click(function(){
+    $('body').show();
+    $.post('http://bg-bank/NUIFocusOff', JSON.stringify({}));
+    $('.placeholder').show();
+    $('#einzahlen').show();
+    $('#uberweisen').show();
+    $('#auszahlen').show();
+})
+
+$("#einzahlen").submit(function(e) {
+    e.preventDefault(); 
+    $.post('http://bg-bank/deposit', JSON.stringify({
+        amount: $("#einzahl").val()
+    }));
+    document.getElementById('einzahl').value = '';
+});
+$("#uberweisen").submit(function(e) {
+    e.preventDefault(); 
+    $.post('http://bg-bank/transfer', JSON.stringify({
+        to: $("#id").val(),
+        amountt: $("#uberweis").val()
+    }));
+    document.getElementById('uberweis').value = '';
+    document.getElementById('id').value = '';
+});
+$("#auszahlen").submit(function(e) {
+    e.preventDefault(); 
+    $.post('http://bg-bank/withdrawl', JSON.stringify({
+        amountw: $("#auszahl").val()
+
+    }));
+    document.getElementById('auszahl').value = '';
+
+});
+document.onkeyup = function(data){
+    if (data.which == 27){
+        $('body').show();
+        $.post('http://bg-bank/NUIFocusOff', JSON.stringify({}));
+        $('.placeholder').show();
+        $('#einzahlen').show();
+        $('#uberweisen').show();
+        $('#auszahlen').show();
+    }
+}
+                </script>
+        </body>
+        </html>
